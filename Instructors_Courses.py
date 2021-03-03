@@ -30,12 +30,12 @@ def getCourses(driver):
     uAlberta_Northern_courses = []
     for each_keyword in contentList:
         # each_keyword = each_keyword[1].strip
-        each_keyword = each_keyword[1]
+        each_keyword = f'"{each_keyword[1]}"'
         driver.get(f"https://www.ualberta.ca/search/index.html#q={each_keyword}&t=Courses&sort=relevancy")
         time.sleep(.5)
         # wait for the element to load
         try:
-            WebDriverWait(driver, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "div.coveo-list-layout:nth-child(1)")))
+            WebDriverWait(driver, 2).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "div.coveo-list-layout:nth-child(1)")))
            
         except TimeoutException:
             print("TimeoutException: Element not found")
@@ -52,7 +52,7 @@ def getCourses(driver):
             time.sleep(.5)
             # wait for the element to load
             try:
-                WebDriverWait(driver, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "div.coveo-list-layout:nth-child(1)")))     
+                WebDriverWait(driver, 2).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "div.coveo-list-layout:nth-child(1)")))     
             except TimeoutException:
                 print("TimeoutException: Element not found")
                 return None
@@ -66,57 +66,52 @@ def getCourses(driver):
                     course_num1.url = course.get('href')
                     uAlberta_courses.append(course_num1)
 
-    # course = 0
-    # for course in uAlberta_courses:
-    #     driver.get(course.url)
-    #     time.sleep(.5)
-    #     soup = BeautifulSoup(driver.page_source, "lxml")
-    #     faculty_description = soup.select('div.pb-2:nth-child(3) > p:nth-child(3) > a:nth-child(1)')
-    #     course.faculty = faculty_description[0].text.strip()
-    #     for faculty_course_description_instructor in soup.select("div.row:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1)"):
-    #         for course_description_instructor in faculty_course_description_instructor.find_all('a'):
-    #             for each_instructor in contentList:
-    #                 if each_instructor[1] == course_description_instructor.text:
-    #                     uAlberta_Northern_courses.append(course)
-    #         # uAlberta_Northern_courses.append(course)
-
-    # for val in uAlberta_Northern_courses:   
-    #     try:
-    #         print(val.title +','+ val.faculty +',' + val.instructor) 
-    #     except AttributeError:
-    #         # print("AttributeError:: Element not found")
-    #         # val.instructor = "N/A"
-    #         # print(val.title +','+ val.faculty +',' + val.instructor) 
-    #         continue 
     course = 0
     for course in uAlberta_courses:
         driver.get(course.url)
         time.sleep(.5)
+        f = open('test.csv',"a")
         soup = BeautifulSoup(driver.page_source, "lxml")
         faculty_description = soup.select('div.pb-2:nth-child(3) > p:nth-child(3) > a:nth-child(1)')
         course.faculty = faculty_description[0].text.strip()
-        for faculty_course_description_instructor in soup.select("div.card:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2)"):
-            for course_description_instructor in faculty_course_description_instructor.find_all('a'):
-                course.instructor = course_description_instructor.text
-                for each_instructor in contentList:
-                    if course.instructor == each_instructor[1]:
-                        uAlberta_Northern_courses.append(course)
-        #             else:
-
-
-        #             print(each_instructor[1],"LIST")
-
-        #         print(course.instructor,"WINDOW")
-        # uAlberta_Northern_courses.append(course)
-
-    for val in uAlberta_Northern_courses:   
-        try:
-            print(val.title +','+ val.faculty +',' + val.instructor) 
-        except AttributeError:
-            # print("AttributeError:: Element not found")
-            val.instructor = "N/A"
-            print(val.title +','+ val.faculty +',' + val.instructor) 
-            continue 
+        course_description = soup.h2
+        course_description = course_description.text.strip()
+        course_description = f'"{course_description}"'
+        for faculty_course_description_instructor in soup.select("div.content:nth-child(4)"):
+            for every_faculty_course_description in faculty_course_description_instructor.find_all('div', attrs={'class': 'card mt-4 dv-card-flat'}):    
+                # print(every_faculty_course_description)
+                course_description_term = every_faculty_course_description.h4.string
+                for every_course_description_term in every_faculty_course_description.find_all('div',attrs={'class': 'col-lg-4 col-12 pb-3'}):
+                    try:
+                        course_description_type = f'"{every_course_description_term.strong.text.strip()}"'
+                    except AttributeError:
+                        course_description_type = f'"{"N/A"}"'
+                    course_description_time = '"'+every_course_description_term.em.text.strip().replace("\n", " ")+'"'
+                    # course_prof = every_course_description_term.find_all('a')[0]
+               
+                    try:
+                        course_prof = every_course_description_term.find_all('a')
+                        if len(course_prof) == 2:
+                            course_prof = course_prof[1].text.strip()
+                        else:
+                            course_prof = course_prof[0].text.strip()
+                    except IndexError:
+                        # print("AttributeError:: Element not found")
+                        course_prof = f'"{"N/A"}"'
+                    for each_instructor in contentList:
+                        if course_prof == each_instructor[1]: 
+                            print(course_prof,each_instructor[1])
+                            course_prof = f'"{course_prof}"'         
+                            final_string = course_description+','+course_description_term + "," + course_description_type + "," + course_description_time + "," + course_prof 
+                            final_string1 = final_string + "\n"
+                        elif course_prof != each_instructor[1]:
+                            continue
+                        else:
+                            course_prof = f'"{course_prof}"' 
+                            print(course_prof) 
+                            final_string = course_description+','+course_description_term + "," + course_description_type + "," + course_description_time + "," + course_prof 
+                            final_string1 = final_string + "\n"
+                    f.write(final_string1)
 
 # create the driver object.
 driver = configure_driver()
