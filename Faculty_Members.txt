@@ -24,10 +24,10 @@ Faculty of Arts - Natalie Van Deusen
 Faculty of Arts - Sally Rice
 Faculty of Arts - Antti Arppe
 Faculty of Arts - Jordan Lachler
-Augustana Campus - Morten Asfeldt
-Augustana Campus - Greg King
-Augustana Campus - Glynnis Hood
-Augustana Campus - Ingrid Urberg
+Augustana Faculty - Morten Asfeldt
+Augustana Faculty - Greg King
+Augustana Faculty - Glynnis Hood
+Augustana Faculty - Ingrid Urberg
 Faculty of Education - Ali Shiri
 Faculty of Engineering - Amy Kim
 Faculty of Engineering - Yuxiang Chen
