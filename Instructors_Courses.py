@@ -6,6 +6,11 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 import time
+import os 
+import os.path
+from googleapiclient.discovery import build
+from google.oauth2 import service_account
+from dotenv import load_dotenv
 
 class Course:
     # def __init__(self):
@@ -20,14 +25,29 @@ def configure_driver():
     # driver = webdriver.Chrome(options = chrome_options)
     # For windows
     driver = webdriver.Chrome("C:/Users/Zubier/Desktop/UAlberta-North_DB/chromedriver.exe")
+    SERVICE_ACCOUNT_FILE = "keys.json"
+    SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+    creds = None
+    creds = service_account.Credentials.from_service_account_file(
+            SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    # The ID and range of a sample spreadsheet.
+    SPREADSHEET_ID = SPREADSHEET_ID_KEY
+    service = build('sheets', 'v4', credentials=creds)
+    sheet = service.spreadsheets()
+    result = sheet.values().clear(spreadsheetId=SPREADSHEET_ID, range="Northern Instructors!A:M").execute()
+    headerInfo = [["Course Number","Course Title","Course Description","Course Link","Faculty","Term","Course Type","Course Duration","Course Time","Instructor First Name","Instructor First Name","Instructor CCID","Instructor Profile"]]
+
+    # Call the Sheets API
+    result = sheet.values().update(spreadsheetId=SPREADSHEET_ID,
+                                range="Northern Instructors!A1", valueInputOption="USER_ENTERED",body={"values":headerInfo}).execute()
     return driver
 
 
 def getCourses(driver):
     uAlberta_courses = []
-    for each_keyword in facultyList:
-        each_keyword = f'"{each_keyword[1]}"'
-        driver.get(f"https://www.ualberta.ca/search/index.html#q={each_keyword}&t=Courses&sort=relevancy")
+    for each_instructor in instructorList:
+        each_instructor = f'"{each_instructor}"'
+        driver.get(f"https://www.ualberta.ca/search/index.html#q={each_instructor}&t=Courses&sort=relevancy")
         time.sleep(.5)
         # wait for the element to load
         try:
@@ -39,11 +59,11 @@ def getCourses(driver):
 
         # Step 2: Create a parse tree of page sources after searching
         soup = BeautifulSoup(driver.page_source, "lxml")
-        numofPages = soup.select(".CoveoQuerySummary > span:nth-child(1) > span:nth-child(2)")
+        numofPages = soup.select("span.coveo-highlight:nth-child(2)")
         result = numofPages[0].text
 
         for index in range(int(int(result)/10)+1):
-            driver.get(f"https://www.ualberta.ca/search/index.html#q={each_keyword}&first={index*10}&t=Courses&sort=relevancy")
+            driver.get(f"https://www.ualberta.ca/search/index.html#q={each_instructor}&first={index*10}&t=Courses&sort=relevancy")
             time.sleep(.5)
             # wait for the element to load
             try:
@@ -65,70 +85,94 @@ def getCourses(driver):
     for course in uAlberta_courses:
         driver.get(course.url)
         time.sleep(.5)
-        f = open('test.csv',"a")
+        f = open('Northern Instructors.csv',"a")
         soup = BeautifulSoup(driver.page_source, "lxml")
         faculty_description = soup.select('div.pb-2:nth-child(3) > p:nth-child(3) > a:nth-child(1)')
+        course_details = soup.select('div.pb-2:nth-child(3) > p:nth-child(4)')
+        if len(course_details) == 0:
+            course_description = "N/A"
+        else:
+            course_description = course_details[0].text.strip()
+        
         course.faculty = faculty_description[0].text.strip()
         course_description = soup.h2
         course_description = course_description.text.strip()
-        course_description = f'"{course_description}"'
-        course_url = f'"{course.url}"'
+        # course_description = f'"{course_description}"'
+        course_url = course.url
+        course_faculty = f"{course.faculty}"
+        course_number = course_description.split(" - ", 1)[0]
+        course_title = course_description.split(" - ", 1)[1]
         
-        for faculty_course_description_instructor in soup.select("div.content:nth-child(4)"):
+        for faculty_course_description_instructor in soup.select("body"):
             for every_faculty_course_description in faculty_course_description_instructor.find_all('div', attrs={'class': 'card mt-4 dv-card-flat'}):    
                 course_description_term = every_faculty_course_description.h4.string
-                for every_course_description_term in every_faculty_course_description.find_all('div',attrs={'class': 'col-lg-4 col-12 pb-3'}):
-                    try:
-                        course_description_type = f'"{every_course_description_term.strong.text.strip()}"'
-                    except AttributeError:
-                        course_description_type = f'"{"N/A"}"'
-                    # course_description_date = '"'+every_course_description_term.em.text.strip().split('\n')+'"'
-                    course_description_date = every_course_description_term.em.text.strip().split('\n')
-                    if len(course_description_date) > 1:
-                        course_description_time = '"'+course_description_date[1]+'"'
-                    else:
-                        course_description_time = f'"{"N/A"}"'
-                    course_description_date = '"'+course_description_date[0]+'"'
+                course_description_type = every_faculty_course_description.strong.text.strip()
 
+                for course_term_description_type in every_faculty_course_description.find_all('div',attrs={'class': 'col-lg-4 col-12 pb-3'}):
+                    course_description_type = course_term_description_type.strong.text.strip()
                     
+                    if len(course_term_description_type.findAll('em')) >= 2:
+                        course_description_capacity = course_term_description_type.findAll('em')[0]
+                        course_description_date = course_term_description_type.findAll('em')[1].text.strip().split('\n')
+                    course_prof = course_term_description_type.find_all('a')
 
-                    try:
-                        course_prof = every_course_description_term.find_all('a')
-                        if len(course_prof) == 2:
-                            course_prof = course_prof[1].text.strip()
-                        else:
-                            course_prof = course_prof[0].text.strip()
-                    except IndexError:
-                        course_prof = f'"{"N/A"}"'
-                    for each_instructor in facultyList:
-                        if course_prof == each_instructor[1]: 
-                            course_prof = f'"{course_prof}"'         
-                            final_string = course_description+',' + course_url + "," + course_description_term + "," + course_description_type + "," + course_description_date + "," + course_description_time + "," +  course_prof 
-                            final_string1 = final_string + "\n"
-                        elif course_prof != each_instructor[1]:
-                            continue
-                        else:
-                            course_prof = f'"{course_prof}"' 
-                            print(course_prof) 
-                            final_string = course_description+',' + course_url + "," +course_description_term + "," + course_description_type + "," + course_description_date + "," + course_description_time +  "," + course_prof 
-                            final_string1 = final_string + "\n"
-                    f.write(final_string1)
+                    if len(course_description_date) > 1:
+                            course_description_time = course_description_date[1]
+                            course_description_date = course_description_date[0]
+                    else:
+                        course_description_time = "N/A"
+                        course_description_date = course_description_date[0]
+    
+                    if len(course_prof) >= 1:
+                        for course_profInfo in range(len(course_prof)):
+                            course_proflink = 'https://apps.ualberta.ca/directory/person/' + str(course_prof[course_profInfo].get('href').rsplit('/', 1)[-1])
+                            course_profCcid = str(course_prof[course_profInfo].get('href').rsplit('/', 1)[-1])
+                            course_profInfo = course_prof[course_profInfo].text.strip()
+                            course_profName = course_profInfo
+                            if course_profName == '':
+                                pass
+                            else:
+                
+                                course_firstName = course_profName.split(" ", 1)[0]
+                                course_lastName = course_profName.split(" ", 1)[1]
+
+                                if course_profName in instructorList:
+                                    course_faculty = f"{course.faculty}"
+                                    final_string = f'"{course_number}"'+","+f'"{course_title}"'+","+f'"{course_description}"'+","+f'"{course_url}"'+","+f'"{course.faculty}"'+ ","+f'"{course_description_term}"'+","+f'"{course_description_type}"'+","+f'"{course_description_date}"'+","+f'"{course_description_time}"'+","+f'"{course_profName}"'+","+f'"{course_proflink}"'
+                                    final_content = (str(final_string) + "\n")
+                                    spreedsheetlist = [[course_number,course_title,course_description,course_url,course_faculty,course_description_term,course_description_type,course_description_date,course_description_time,course_firstName,course_lastName,course_profCcid,course_proflink]]
+                                else:
+                                    continue
+                                # f.write(final_content)
+                                time.sleep(1)
+                                if spreedsheetlist != '':
+                                    result = sheet.values().append(spreadsheetId=SPREADSHEET_ID,
+                                            range="Northern Instructors!A2", valueInputOption="USER_ENTERED",body={"values":spreedsheetlist}).execute()
+                                else:
+                                    continue
 
 # create the driver object.
+load_dotenv()
+SPREADSHEET_ID_KEY = os.getenv('SPREADSHEET_ID_API_KEY')
 driver = configure_driver()
 with open("./Faculty_Members.txt") as f:
     content = f.readlines()
 # you may also want to remove whitespace characters like `\n` at the end of each line
 content = [x.strip() for x in content] 
 facultyList = []
+instructorList = []
 for word in content:
-    word = word.split(" - ")
-    facultyList.append(word)
-for eachIndex in facultyList:
-    search_faculty = eachIndex[0]
-    search_keyword = eachIndex[1]
+    facultyList.append(word.split(" - ", 1)[0])
+    instructorList.append(word.split(" - ", 1)[1])
+
+SERVICE_ACCOUNT_FILE = "keys.json"
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+SPREADSHEET_ID = SPREADSHEET_ID_KEY
+creds = None
+creds = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+service = build('sheets', 'v4', credentials=creds)
+sheet = service.spreadsheets()
 getCourses(driver)
 # close the driver.
 driver.close()
-
-
