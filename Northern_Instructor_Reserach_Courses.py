@@ -15,18 +15,19 @@ from dotenv import load_dotenv
 class Course:
     # def __init__(self):
     pass
+
 def configure_driver():
     # Add additional Options to the webdriver
     chrome_options = Options()
+
     # add the argument and make the browser Headless.
     chrome_options.add_argument("--headless")
+
     # Instantiate the Webdriver: Mention the executable path of the webdriver you have downloaded
     # For linux/Mac
     # driver = webdriver.Chrome(options = chrome_options)
     # For windows
     driver = webdriver.Chrome("..\chromedriver.exe")
-
-    # Google Spreedsheets!!!
     SERVICE_ACCOUNT_FILE = "keys.json"
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
     creds = None
@@ -36,20 +37,19 @@ def configure_driver():
     SPREADSHEET_ID = SPREADSHEET_ID_KEY
     service = build('sheets', 'v4', credentials=creds)
     sheet = service.spreadsheets()
-    result = sheet.values().clear(spreadsheetId=SPREADSHEET_ID, range="Northern Instructors!A:M").execute()
+    result = sheet.values().clear(spreadsheetId=SPREADSHEET_ID, range="Northern Instructor Reserach Courses!A:M").execute()
     headerInfo = [["Course Number","Course Title","Course Description","Course Link","Faculty","Term","Course Type","Course Duration","Course Time","Instructor First Name","Instructor Last Name","Instructor CCID","Instructor Profile"]]
 
     # Call the Sheets API
     result = sheet.values().update(spreadsheetId=SPREADSHEET_ID,
-                                range="Northern Instructors!A1", valueInputOption="USER_ENTERED",body={"values":headerInfo}).execute()
+                                range="Northern Instructor Reserach Courses!A1", valueInputOption="USER_ENTERED",body={"values":headerInfo}).execute()
     return driver
 
 # Thus functions parses and captures any of the available courses that each instructor teaches.
 def getCourses(driver):
-    # Step 1: instantiates a list of uAlberta_Courses to store the parsed courses
     uAlberta_courses = []
     for each_instructor in instructorList:
-        each_instructor = f'"{each_instructor}"'
+        each_instructor = f'"{each_instructor}"'+'Research'
         driver.get(f"https://www.ualberta.ca/search/index.html#q={each_instructor}&t=Courses&sort=relevancy")
         time.sleep(.5)
         # wait for the element to load
@@ -83,29 +83,28 @@ def getCourses(driver):
                     # course_num1.title = course.text
                     course_num1.url = course.get('href')
                     uAlberta_courses.append(course_num1)
-
+    
     # Step 4: Parses through each course obtained to it's respectful variable and validates any empty values
     course = 0
     for course in uAlberta_courses:
         driver.get(course.url)
         time.sleep(.5)
-        # f = open('Northern Instructors.csv',"a")
         soup = BeautifulSoup(driver.page_source, "lxml")
         faculty_description = soup.select('div.pb-2:nth-child(3) > p:nth-child(3) > a:nth-child(1)')
         course_details = soup.select('div.pb-2:nth-child(3) > p:nth-child(4)')
+        print(course_details)
         if len(course_details) == 0:
             course_description = "N/A"
         else:
             course_description = course_details[0].text.strip()
         
         course.faculty = faculty_description[0].text.strip()
-        course_number_detail = soup.h2
-        course_number_detail = course_number_detail.text.strip()
-        # course_description = f'"{course_description}"'
+        course_number_details = soup.h2
+        course_number_details = course_number_details.text.strip()
         course_url = course.url
         course_faculty = f"{course.faculty}"
-        course_number = course_number_detail.split(" - ", 1)[0]
-        course_title = course_number_detail.split(" - ", 1)[1]
+        course_number = course_number_details.split(" - ", 1)[0]
+        course_title = course_number_details.split(" - ", 1)[1]
         
         for faculty_course_description_instructor in soup.select("body"):
             for every_faculty_course_description in faculty_course_description_instructor.find_all('div', attrs={'class': 'card mt-4 dv-card-flat'}):    
@@ -152,7 +151,7 @@ def getCourses(driver):
                                 time.sleep(1)
                                 if spreedsheetlist != '':
                                     result = sheet.values().append(spreadsheetId=SPREADSHEET_ID,
-                                            range="Northern Instructors!A2", valueInputOption="USER_ENTERED",body={"values":spreedsheetlist}).execute()
+                                            range="Northern Instructor Reserach Courses!A2", valueInputOption="USER_ENTERED",body={"values":spreedsheetlist}).execute()
                                 else:
                                     continue
 
@@ -160,17 +159,21 @@ def getCourses(driver):
 load_dotenv()
 SPREADSHEET_ID_KEY = os.getenv('SPREADSHEET_ID_API_KEY')
 driver = configure_driver()
+
+# opens the faculty member text file to parse and read each line to obtain the faculty and instructor to construct the search.
 with open("./Faculty_Members.txt") as f:
     content = f.readlines()
-    
+
 # you may also want to remove whitespace characters like `\n` at the end of each line
 content = [x.strip() for x in content] 
 facultyList = []
 instructorList = []
+
+# Splits each line based on faculty and instructor
 for word in content:
     facultyList.append(word.split(" - ", 1)[0])
     instructorList.append(word.split(" - ", 1)[1])
-
+    
 # Instantiation Google API authentication 
 SERVICE_ACCOUNT_FILE = "keys.json"
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']

@@ -26,7 +26,7 @@ def configure_driver():
     # For linux/Mac
     # driver = webdriver.Chrome(options = chrome_options)
     # For windows
-    driver = webdriver.Chrome("C:/Users/Zubier/Desktop/UAlberta-North_DB/chromedriver.exe")
+    driver = webdriver.Chrome("..\chromedriver.exe")
     
     # Google Spreedsheets!!!
     SERVICE_ACCOUNT_FILE = "keys.json"
@@ -39,13 +39,15 @@ def configure_driver():
     service = build('sheets', 'v4', credentials=creds)
     sheet = service.spreadsheets()
     result = sheet.values().clear(spreadsheetId=SPREADSHEET_ID_KEY, range="Northern Courses!A:N").execute()
-    headerInfo = [["Course Number","Course Title","Course Description","Course Link","Faculty","Term","Course Type","Course Duration","Course Time","Instructor First Name","Instructor First Name","Instructor Profile"]]
+    headerInfo = [["Course Number","Course Title","Course Description","Course Link","Faculty","Term","Course Type","Course Duration","Course Time","Instructor First Name","Instructor Last Name","Instructor Profile"]]
     # Call the Sheets API
     result = sheet.values().update(spreadsheetId=SPREADSHEET_ID_KEY,
                                 range="Northern Courses!A1", valueInputOption="USER_ENTERED",body={"values":headerInfo}).execute()
     return driver
 
+# Thus functions parses and captures any of the available courses that each instructor teaches.
 def getCourses(driver):
+    # Step 1: instantiates a list of uAlberta_Courses to store the parsed courses
     uAlberta_courses = []
     for each_keyword in search_keyword:
         if type(each_keyword) == list:
@@ -93,12 +95,13 @@ def getCourses(driver):
                     course_num1.url = course.get('href')
                     course_num1.tit = each_keyword
                     uAlberta_courses.append(course_num1)
-
+                    
+    # Step 4: Parses through each course obtained to it's respectful variable and validates any empty values
     course = 0
     for course in uAlberta_courses:
         driver.get(course.url)
         time.sleep(.5)
-        f = open('Northern Courses.csv',"a")
+        # f = open('Northern Courses.csv',"a")
         soup = BeautifulSoup(driver.page_source, "lxml")
         faculty_type = soup.select('div.pb-2:nth-child(3) > p:nth-child(3) > a:nth-child(1)')
         course_details = soup.select('div.pb-2:nth-child(3) > p:nth-child(4)')
@@ -159,9 +162,9 @@ def getCourses(driver):
                                     final_string = f'"{course_number}"'+","+f'"{course_title}"'+","+f'"{course_description}"'+","+f'"{course_url}"'+","+f'"{course.faculty}"'+ ","+f'"{course_description_term}"'+","+f'"{course_description_type}"'+","+f'"{course_description_date}"'+","+f'"{course_description_time}"'+","+f'"{course_profName}"'+","+f'"{course_proflink}"'
                                     final_content = (str(final_string) + "\n")
                                     spreedsheetlist = [[course_number,course_title,course_description,course_url,course_faculty,course_description_term,course_description_type,course_description_date,course_description_time,course_firstName,course_lastName,course_proflink]]
-                                # f.write(final_content)
+                                
+                                # Step 5: Outputs the finalized data into the sheet
                                 time.sleep(1)
-
                                 if spreedsheetlist != '':
                                     result = sheet.values().append(spreadsheetId=SPREADSHEET_ID_KEY,
                                                 range="Northern Courses!A2", valueInputOption="USER_ENTERED",body={"values":spreedsheetlist}).execute()
@@ -185,9 +188,9 @@ def getCourses(driver):
                             final_string = f'"{course_number}"'+","+f'"{course_title}"'+","+f'"{course_description}"'+","+f'"{course_url}"'+","+f'"{course.faculty}"'+ ","+f'"{course_description_term}"'+","+f'"{course_description_type}"'+","+f'"{course_description_date}"'+","+f'"{course_description_time}"'+","+f'"{course_profName}"'+","+f'"{course_proflink}"'
                             final_content = (str(final_string) + "\n")
                             spreedsheetlist = [[course_number,course_title,course_description,course_url,course_faculty,course_description_term,course_description_type,course_description_date,course_description_time,course_firstName,course_lastName,course_proflink]]
-                        # f.write(final_content)
+                        
+                        # Step 5: Outputs the finalized data into the sheet
                         time.sleep(1)
-
                         if spreedsheetlist != '':
                             result = sheet.values().append(spreadsheetId=SPREADSHEET_ID_KEY,
                                             range="Northern Courses!A2", valueInputOption="USER_ENTERED",body={"values":spreedsheetlist}).execute()
@@ -199,12 +202,16 @@ load_dotenv()
 SPREADSHEET_ID_KEY = os.getenv('SPREADSHEET_ID_API_KEY')
 driver = configure_driver()
 
+# Applicable keywords to search, 
+# Validation of keywords that need to not be duplicated/required are considered and removed from query search
 search_keyword = [["Aboriginal",f'-"Indigenous Legal Issues"'],"Arctic",["Boreal","-Arctic"],["circumpolar","-Boreal"],"Canada's North","climate and weather","Cree",["Indigenous peoples",f'-"Native Peoples"'],["Native Peoples","-Aboriginal"],["Native Studies",f'-"Indigenous"'],["Northern",f'-"Northern Regions"'f'-"North"'f'-"Northern Ecosystems"'f'-"Northern Ecology"'],"Northern Regions",["northern systems",f'-"Northern"'],
                     ["Polar", "-Calculus"],"permafrost","ice fields","ice masses","ice age",["traditional knowledge",f'-"environmental sustainability"'],["Yukon",f'-"Canadian North"'],"Northwest Territories","NWT","Nunavik","Nunatsiavut","cryosphere",["tundra",f'-" Northern Ecosystems"'],"Indigenous languages","Indigenous health","Indigenous wellbeing","wildlife management","land claims","northern education","Indigenous education",
-                        "Participatory Research"]
+                        "Participatory Research","Advanced Research Skills"]
 
+# Applicable faculties to search within
 search_faculty = ["Faculty of Agricultural, Life and Environmental Sciences","Faculty of Arts","Augustana Faculty","Faculty of Engineering","Faculty of Education","Faculty of Kinesiology, Sport, and Recreation","Faculty of Law","Faculty of Native Studies","Faculty of Public Health","School of Public Health","Faculty of Science"]
 
+# Instantiation Google API authentication 
 SERVICE_ACCOUNT_FILE = "keys.json"
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 creds = None
