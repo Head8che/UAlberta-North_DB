@@ -6,17 +6,17 @@
 -- Please follow the details below as they will be required to have the program run successfully. --
 
 **Required dependencies**
-`
-— Web Browser: Google Chrome
-— Chrome Driver
-— Beautifulsoup4
-— Selenium
-— Google Docs API
-— Google oAuth2
-— Dotenv
-— Code Editor
-— Python3.4+
-`
+
+`— Web Browser: Google Chrome`
+`— Chrome Driver`
+`— Beautifulsoup4`
+`— Selenium`
+`— Google Docs API`
+`— Google oAuth2`
+`— Dotenv`
+`— Code Editor`
+`— Python3.4+`
+
 
 **ChromeDriver**
 WebDriver is an open source tool for automated testing of webapps across many browsers. It provides capabilities for navigating to web pages, user input, JavaScript execution, and more.  ChromeDriver is a standalone server that implements the W3C WebDriver standard. ChromeDriver is available for Chrome on Android and Chrome on Desktop (Mac, Linux, Windows and ChromeOS).  
