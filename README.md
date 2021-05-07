@@ -44,7 +44,7 @@ Dotenv is a zero-dependency module that loads environment variables from a .env 
 ## Installation Guide ##
 1) Download Google Chrome if not already installed:
 
-https://www.google.com/chrome/
+    https://www.google.com/chrome/
 
 2) Download the latest stable released Chrome Driver for the correct OS:
     — https://chromedriver.chromium.org/
