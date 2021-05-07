@@ -20,24 +20,24 @@
 `— Python3.4+`
 
 
-**ChromeDriver**
+**ChromeDriver:**
 WebDriver is an open source tool for automated testing of webapps across many browsers. It provides capabilities for navigating to web pages, user input, JavaScript execution, and more.  ChromeDriver is a standalone server that implements the W3C WebDriver standard. ChromeDriver is available for Chrome on Android and Chrome on Desktop (Mac, Linux, Windows and ChromeOS).  
 
 
-**Beautifulsoup4**
+**Beautifulsoup:4**
 Beautiful Soup is a library that makes it easy to scrape information from web pages. It sits atop an HTML or XML parser, providing Pythonic idioms for iterating, searching, and modifying the parse tree.#
 
-**Selenium**
+**Selenium:**
 The selenium package is used to automate web browser interaction from Python. #
 
 
-**Google Docs API**
+**Google Docs API:**
 A Google Cloud Platform project with the API enabled. To create a project and enable an API, refer to Create a project and enable the API #
 
-**Google oAuth2**
+**Google oAuth2:**
 This library provides the ability to authenticate to Google APIs using various methods. It also provides integration with several HTTP libraries.#
 
-**Dotenv**
+**Dotenv:**
 Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env. Storing configuration in the environment separate from code is based on The Twelve-Factor App methodology.#
 
 
