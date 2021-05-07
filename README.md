@@ -85,30 +85,32 @@ Dotenv is a zero-dependency module that loads environment variables from a .env 
    `pip3 install dotenv`
 
 8) You should then be able to run the intended file to accomplish the required tasks.
-    — Faculty_Members.txt: A list of Northern Instructors. It's important to note the format “Faculty — First Name Last Name”.
 
-    — Northern_Instructor_Reserach_Courses.py: Obtains a list of *research* related course that in relation to the list of Northern Instructor from Faculty_Members.txt.
+    Faculty_Members.txt: A list of Northern Instructors. It's important to note the format “Faculty — First Name Last Name”.
+
+    Northern_Instructor_Reserach_Courses.py: Obtains a list of *research* related course that in relation to the list of Northern Instructor from Faculty_Members.txt.
     
-    — Instructors_Courses.py: Obtains a list of all courses that are in relation to the Northern Instructor from Faculty_Members.txt.
+    Instructors_Courses.py: Obtains a list of all courses that are in relation to the Northern Instructor from Faculty_Members.txt.
 
-    — Instructors_Courses.py: Obtains courses of keywords that have a relation to a Northern based course.
+    Instructors_Courses.py: Obtains courses of keywords that have a relation to a Northern based course.
 
-    — chromedriver.exe: Chrome extension for web automation.
+    chromedriver.exe: Chrome extension for web automation.
 
-    —.env: Contains API Key that contains extremely important information which should not be anywhere shared publicly. 
+    .env: Contains API Key that contains extremely important information which should not be anywhere shared publicly. 
 
-    — keys.json: Contains Google Cloud API keys, for authentication works within the Google Cloud as a service account. This is also extremely important information which should not be anywhere shared publicly.
+    keys.json: Contains Google Cloud API keys, for authentication works within the Google Cloud as a service account. This is also extremely important information which should not be anywhere shared publicly.
 
 9) Please ensure that you don't close or interrupt the Google Chrome driver as the automation is in progress. You will be able to distinguish the different type of Chrome window/browser with the disclaimer within the header of the window.
 
 10) The updated data can be found within the Google Drive (Google Sheets) in correspondence with its correct sheet name.
 
 
-`
-Future Updates Guide 
-    — The Google Web Browser often is updated automatically by Google. This may cause issues in the future with the Chrome Driver extension. Though this can be easily fixed by doing the following steps:
-        — Check the version of the Google Chrome: Within the Google Chrome find Help > About Google Chrome.
-        — Remove the current chromedriver.exe within this folder
-        — Redownload the latest Chrome Driver and replace the removed Chrome Driver extension with the new one.
+## Future Updates Guide ## 
 
-`
+    The Google Web Browser often is updated automatically by Google. This may cause issues in the future with the Chrome Driver extension. Though this can be easily fixed by doing the following steps:
+
+    Check the version of the Google Chrome: Within the Google Chrome find Help > About Google Chrome.
+    
+    Remove the current chromedriver.exe within this folder
+    
+    Redownload the latest Chrome Driver and replace the removed Chrome Driver extension with the new one.
