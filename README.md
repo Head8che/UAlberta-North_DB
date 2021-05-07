@@ -9,11 +9,12 @@
 
 `— Web Browser: Google Chrome`
 `— Chrome Driver`
-`— Beautifulsoup4`
 
+`— Beautifulsoup4`
 `— Selenium`
 `— Google Docs API`
 `— Google oAuth2`
+
 `— Dotenv`
 `— Code Editor`
 `— Python3.4+`
