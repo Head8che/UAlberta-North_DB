@@ -10,6 +10,7 @@
 `— Web Browser: Google Chrome`
 `— Chrome Driver`
 `— Beautifulsoup4`
+
 `— Selenium`
 `— Google Docs API`
 `— Google oAuth2`
