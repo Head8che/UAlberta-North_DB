@@ -106,11 +106,12 @@ Dotenv is a zero-dependency module that loads environment variables from a .env 
 
 
 ## Future Updates Guide ## 
+   The Google Web Browser often is updated automatically by Google. 
+   
+   This may cause issues in the future with the Chrome Driver extension. Though this can be easily fixed by doing the following steps:
 
-    The Google Web Browser often is updated automatically by Google. This may cause issues in the future with the Chrome Driver extension. Though this can be easily fixed by doing the following steps:
-
-    Check the version of the Google Chrome: Within the Google Chrome find Help > About Google Chrome.
+        Check the version of the Google Chrome: Within the Google Chrome find Help > About Google Chrome.
     
-    Remove the current chromedriver.exe within this folder
+        Remove the current chromedriver.exe within this folder
     
-    Redownload the latest Chrome Driver and replace the removed Chrome Driver extension with the new one.
+        Redownload the latest Chrome Driver and replace the removed Chrome Driver extension with the new one.
