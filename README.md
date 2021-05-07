@@ -47,29 +47,42 @@ Dotenv is a zero-dependency module that loads environment variables from a .env 
     https://www.google.com/chrome/
 
 2) Download the latest stable released Chrome Driver for the correct OS:
-    — https://chromedriver.chromium.org/
+
+    https://chromedriver.chromium.org/
 
 3) Download one of the following Code Editors:
-    — Visual Studio Code by Microsoft, Atom or Sublime Text
-        — https://code.visualstudio.com/
-        — https://atom.io/
-        — https://www.sublimetext.com/
+
+    Visual Studio Code by Microsoft, Atom or Sublime Text
+    
+        https://code.visualstudio.com/
+        
+        https://atom.io/
+        
+        https://www.sublimetext.com/
 
 4) Download the latest version of Python3 for the correct OS (Operating System):
-    — https://www.python.org/downloads/
+
+    https://www.python.org/downloads/
 
 5) Download the source code file or clone the GitHub repository. 
 
 6) Open the downloaded source code file within the code editor.
 
 7) Within the Terminal command, download the following dependencies as followed:
-    — pip3 install beautifulsoup4
-    — pip3 install -U selenium
-    — pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
-    — pip3 install3 --upgrade google-auth
-    — pip3 install google-auth google-auth-oauthlib
-    — pip3 install python-dotenv
-    — pip3 install dotenv
+
+   `pip3 install beautifulsoup4`
+    
+   `pip3 install -U selenium`
+    
+   `pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib`
+    
+   `pip3 install3 --upgrade google-auth`
+    
+   `pip3 install google-auth google-auth-oauthlib`
+    
+   `pip3 install python-dotenv`
+    
+   `pip3 install dotenv`
 
 8) You should then be able to run the intended file to accomplish the required tasks.
     — Faculty_Members.txt: A list of Northern Instructors. It's important to note the format “Faculty — First Name Last Name”.
