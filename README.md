@@ -5,7 +5,7 @@
 
 -- Please follow the details below as they will be required to have the program run successfully. --
 
-**Required dependencies**
+**Required dependencies:**
 
 `— Web Browser: Google Chrome`
 `— Chrome Driver`
