@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-# Last Update Date : April 30,2020    
-# Zubier Hagi (Hagi@ualberta.ca)
-=======
-**_Update Date : April 30,2020_**
+**_Last updated date: April 30,2020_**
+
 **_Zubier Hagi (Hagi@ualberta.ca)_**
->>>>>>> 4ef38b01268cb0314cca9013b55fb4a37e69406c
 
 ## Setup ##
 
@@ -15,10 +11,6 @@
 `— Web Browser: Google Chrome`
 `— Chrome Driver`
 
-<<<<<<< HEAD
-Beautifulsoup4
-# Beautiful Soup is a library that makes it easy to scrape information from web pages. It sits atop an HTML or XML parser, providing Pythonic idioms for iterating, searching, and modifying the parse tree.#
-=======
 `— Beautifulsoup4`
 `— Selenium`
 `— Google Docs API`
@@ -27,7 +19,7 @@ Beautifulsoup4
 `— Dotenv`
 `— Code Editor`
 `— Python3.4+`
->>>>>>> 4ef38b01268cb0314cca9013b55fb4a37e69406c
+
 
 
 **ChromeDriver:**
@@ -102,11 +94,11 @@ Dotenv is a zero-dependency module that loads environment variables from a .env 
     
     Instructors_Courses.py: Obtains a list of all courses that are in relation to the Northern Instructor from Faculty_Members.txt.
 
-<<<<<<< HEAD
+
     — Northern_Courses.py: Obtains courses of keywords that have a relation to a Northern based course.
-=======
+
     Instructors_Courses.py: Obtains courses of keywords that have a relation to a Northern based course.
->>>>>>> 4ef38b01268cb0314cca9013b55fb4a37e69406c
+
 
     chromedriver.exe: Chrome extension for web automation.
 
@@ -119,18 +111,11 @@ Dotenv is a zero-dependency module that loads environment variables from a .env 
 10) The updated data can be found within the Google Drive (Google Sheets) in correspondence with its correct sheet name.
 
 
-<<<<<<< HEAD
-`Future Updates Guide 
-    — The Google Web Browser is often updated automatically by Google. This may cause issues in the future with the Chrome Driver extension. Though this can be easily fixed by doing the following steps:
-        — Check the version of the Google Chrome: Within the Google Chrome find Help > About Google Chrome.
-        — Remove the current chromedriver.exe within this folder
-        — Redownload the latest Chrome Driver and replace the removed Chrome Driver extension with the new one.
-=======
 ## Future Updates Guide ## 
    The Google Web Browser often is updated automatically by Google. 
    
    This may cause issues in the future with the Chrome Driver extension. Though this can be easily fixed by doing the following steps:
->>>>>>> 4ef38b01268cb0314cca9013b55fb4a37e69406c
+
 
         Check the version of the Google Chrome: Within the Google Chrome find Help > About Google Chrome.
     
