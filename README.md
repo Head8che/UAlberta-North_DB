@@ -1,4 +1,4 @@
-# Update Date : April 30,2020    
+# Last Update Date : April 30,2020    
 # Zubier Hagi (Hagi@ualberta.ca)
 
 ## Setup ##
@@ -19,7 +19,6 @@
 
 ChromeDriver
 # WebDriver is an open source tool for automated testing of webapps across many browsers. It provides capabilities for navigating to web pages, user input, JavaScript execution, and more.  ChromeDriver is a standalone server that implements the W3C WebDriver standard. ChromeDriver is available for Chrome on Android and Chrome on Desktop (Mac, Linux, Windows and ChromeOS).  
-
 
 Beautifulsoup4
 # Beautiful Soup is a library that makes it easy to scrape information from web pages. It sits atop an HTML or XML parser, providing Pythonic idioms for iterating, searching, and modifying the parse tree.#
@@ -74,7 +73,7 @@ Dotenv
     
     — Instructors_Courses.py: Obtains a list of all courses that are in relation to the Northern Instructor from Faculty_Members.txt.
 
-    — Instructors_Courses.py: Obtains courses of keywords that have a relation to a Northern based course.
+    — Northern_Courses.py: Obtains courses of keywords that have a relation to a Northern based course.
 
     — chromedriver.exe: Chrome extension for web automation.
 
@@ -88,7 +87,7 @@ Dotenv
 
 
 `Future Updates Guide 
-    — The Google Web Browser often is updated automatically by Google. This may cause issues in the future with the Chrome Driver extension. Though this can be easily fixed by doing the following steps:
+    — The Google Web Browser is often updated automatically by Google. This may cause issues in the future with the Chrome Driver extension. Though this can be easily fixed by doing the following steps:
         — Check the version of the Google Chrome: Within the Google Chrome find Help > About Google Chrome.
         — Remove the current chromedriver.exe within this folder
         — Redownload the latest Chrome Driver and replace the removed Chrome Driver extension with the new one.
